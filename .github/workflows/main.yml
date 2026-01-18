@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - main
-      
+
   workflow_dispatch:
 
 jobs:
-
   deploy-prod:
     name: Deploy PROD
     if: github.ref == 'refs/heads/main'
@@ -27,10 +26,11 @@ jobs:
           ls -la
           find . -name databricks.yml
 
-   - name: Deploy Databricks Bundle (PROD)
-    working-directory: bundle
-    run: databricks bundle deploy --target prod
-    env:
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
-      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+      - name: Deploy Databricks Bundle (PROD)
+        working-directory: bundle
+        run: databricks bundle deploy --target prod
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+
 
