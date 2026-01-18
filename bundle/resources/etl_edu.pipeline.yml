@@ -1,0 +1,11 @@
+resources:
+  pipelines:
+    etl_edu:
+      name: etl_edu
+      libraries:
+        - glob:
+            include: ../src/etl_edu/transformations/**
+      serverless: true
+      catalog: wk_dev
+      schema: default
+      root_path: ../src/etl_edu
