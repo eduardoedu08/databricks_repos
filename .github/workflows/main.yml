@@ -1,36 +1,33 @@
-name: Databricks Bundle CI/CD
+name: Deploy Databricks Bundle
 
 on:
   push:
     branches:
       - main
-
-  workflow_dispatch:
+      - develop
 
 jobs:
-  deploy-prod:
-    name: Deploy PROD
-    if: github.ref == 'refs/heads/main'
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Databricks CLI
+      - name: Install Databricks CLI
         uses: databricks/setup-cli@v0.221.0
 
-      - name: Debug bundle root
+      - name: Deploy DEV
+        if: github.ref == 'refs/heads/develop'
         run: |
-          pwd
-          ls -la
-          find . -name databricks.yml
+          databricks bundle deploy --target dev
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
 
-      - name: Deploy Databricks Bundle (PROD)
-        working-directory: bundle
-        run: databricks bundle deploy --target prod
+      - name: Deploy PROD
+        if: github.ref == 'refs/heads/main'
+        run: |
+          databricks bundle deploy --target prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
-
-
