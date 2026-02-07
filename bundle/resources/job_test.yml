@@ -1,0 +1,20 @@
+
+resources:
+  jobs:
+    Job_edu:
+      name: Job_edu
+      tasks:
+        - task_key: Job_teste
+          notebook_task:
+            notebook_path: ${bundle.root}/files/src/etl_edu/notebooks/nb_teste_edu
+            base_parameters:
+              catalog: ${var.catalog}
+            source: WORKSPACE
+          environment_key: Default
+      queue:
+        enabled: true
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED
