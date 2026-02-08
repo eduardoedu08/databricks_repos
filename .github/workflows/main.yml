@@ -11,23 +11,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      # 2️⃣ Instala Databricks CLI
       - name: Install Databricks CLI
         uses: databricks/setup-cli@v0.221.0
 
-      - name: Deploy DEV
-        if: github.ref == 'refs/heads/develop'
+      # 3️⃣ (Opcional, mas MUITO útil) Mostrar estrutura do bundle
+      - name: Debug bundle structure
+        working-directory: ./bundle
         run: |
-          databricks bundle deploy --target dev
+          pwd
+          ls -R .
+      - name: Clean bundle cache
+        working-directory: ./bundle
+        run: |
+          rm -rf .databricks
+          rm -rf .bundle
+
+      # 4️⃣ (CRÍTICO) Validate DEV com debug
+      - name: Validate bundle (DEV)
+        if: github.ref == 'refs/heads/develop'
+        working-directory: ./bundle
+        run: databricks bundle validate --target dev --debug
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
 
+      # 5️⃣ Deploy DEV (só roda se o validate passar)
+      - name: Deploy DEV
+        if: github.ref == 'refs/heads/develop'
+        working-directory: ./bundle
+        run: databricks bundle deploy --target dev
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+
+      # 6️⃣ Validate PROD com debug
+      - name: Validate bundle (PROD)
+        if: github.ref == 'refs/heads/main'
+        working-directory: ./bundle
+        run: databricks bundle validate --target prod --debug
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+
+      # 7️⃣ Deploy PROD
       - name: Deploy PROD
         if: github.ref == 'refs/heads/main'
-        run: |
-          databricks bundle deploy --target prod
+        working-directory: ./bundle
+        run: databricks bundle deploy --target prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
