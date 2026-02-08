@@ -3,8 +3,23 @@ resources:
     Job_edu:
       name: Job_edu
 
+      job_clusters:
+        - job_cluster_key: cheap_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1
+
+            azure_attributes:
+              availability: SPOT_WITH_FALLBACK_AZURE
+              first_on_demand: 1
+
+            autotermination_minutes: 10
+
       tasks:
         - task_key: Job_teste
+          job_cluster_key: cheap_cluster
+
           notebook_task:
             notebook_path: ${workspace.root_path}/files/src/etl_edu/notebooks/nb_teste_edu
             base_parameters:
@@ -14,4 +29,3 @@ resources:
       queue:
         enabled: true
 
-      performance_target: PERFORMANCE_OPTIMIZED
