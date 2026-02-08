@@ -32,7 +32,7 @@ targets:
       catalog: wk_dev_edu
       schema: bronze
   prod:
-  
+ 
     workspace:
       host: https://adb-7405609494406006.6.azuredatabricks.net/
       # We explicitly deploy to /Workspace/Users/eduardoedu08_gmail.com#ext#@eduardoedu08gmail.onmicrosoft.com to make sure we only have a single copy.
