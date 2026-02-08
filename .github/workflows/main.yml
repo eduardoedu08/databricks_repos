@@ -25,6 +25,11 @@ jobs:
         run: |
           pwd
           ls -R .
+      - name: Clean bundle cache
+        working-directory: ./bundle
+        run: |
+          rm -rf .databricks
+          rm -rf .bundle
 
       # 4️⃣ (CRÍTICO) Validate DEV com debug
       - name: Validate bundle (DEV)
