@@ -56,7 +56,7 @@ jobs:
         run: databricks bundle validate --target prod --debug
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PRODUCAO }}
 
       # 7️⃣ Deploy PROD
       - name: Deploy PROD
@@ -65,4 +65,4 @@ jobs:
         run: databricks bundle deploy --target prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PRODUCAO }}
